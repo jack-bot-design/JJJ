@@ -6,8 +6,8 @@
 <meta name="theme-color" content="#c96442">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="사진→워드">
-<title>사진 글자 → 워드</title>
+<meta name="apple-mobile-web-app-title" content="&#49324;&#51652;&#8594;&#50892;&#46300;">
+<title>&#49324;&#51652; &#44544;&#51088; &#8594; &#50892;&#46300;</title>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.js"></script>
 <style>
@@ -35,19 +35,19 @@ textarea{width:100%;min-height:260px;padding:14px;border-radius:12px;border:1px 
 </head>
 <body>
 <main>
-  <h1>📷 사진 글자 → 워드</h1>
-  <p class="sub">문서를 촬영하면 글자를 뽑아 편집하고, 워드 파일로 저장해요.</p>
+  <h1>&#128247; &#49324;&#51652; &#44544;&#51088; &#8594; &#50892;&#46300;</h1>
+  <p class="sub">&#47928;&#49436;&#47484; &#52524;&#50689;&#54616;&#47732; &#44544;&#51088;&#47484; &#48977;&#50500; &#54200;&#51665;&#54616;&#44256;, &#50892;&#46300; &#54028;&#51068;&#47196; &#51200;&#51109;&#54644;&#50836;.</p>
   <div class="row">
-    <div class="pick"><div class="btn primary">카메라로 촬영</div><input id="cam" type="file" accept="image/*" capture="environment" aria-label="카메라로 촬영"></div>
-    <div class="pick"><div class="btn">앨범에서 선택</div><input id="gal" type="file" accept="image/*" multiple aria-label="앨범에서 선택"></div>
+    <div class="pick"><div class="btn primary">&#52852;&#47700;&#46972;&#47196; &#52524;&#50689;</div><input id="cam" type="file" accept="image/*" capture="environment" aria-label="&#52852;&#47700;&#46972;&#47196; &#52524;&#50689;"></div>
+    <div class="pick"><div class="btn">&#50536;&#48276;&#50640;&#49436; &#49440;&#53469;</div><input id="gal" type="file" accept="image/*" multiple aria-label="&#50536;&#48276;&#50640;&#49436; &#49440;&#53469;"></div>
   </div>
-  <img id="preview" alt="선택한 사진 미리보기">
+  <img id="preview" alt="&#49440;&#53469;&#54620; &#49324;&#51652; &#48120;&#47532;&#48372;&#44592;">
   <div id="status"></div>
-  <textarea id="out" placeholder="추출된 글자가 여기에 표시돼요. 직접 수정할 수도 있어요."></textarea>
+  <textarea id="out" placeholder="&#52628;&#52636;&#46108; &#44544;&#51088;&#44032; &#50668;&#44592;&#50640; &#54364;&#49884;&#46076;&#50836;. &#51649;&#51217; &#49688;&#51221;&#54624; &#49688;&#46020; &#51080;&#50612;&#50836;."></textarea>
   <div class="row tools">
-    <button id="copy">복사</button>
-    <button id="clear">지우기</button>
-    <button id="save" class="primary">Word로 저장</button>
+    <button id="copy">&#48373;&#49324;</button>
+    <button id="clear">&#51648;&#50864;&#44592;</button>
+    <button id="save" class="primary">Word&#47196; &#51200;&#51109;</button>
   </div>
 </main>
 
@@ -66,21 +66,21 @@ function shrink(file, max = 2000) {
       const c = document.createElement('canvas');
       c.width = Math.round(img.width * s); c.height = Math.round(img.height * s);
       c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-      c.toBlob(b => b ? resolve({ blob: b, url }) : reject(new Error('변환 실패')), 'image/jpeg', 0.9);
+      c.toBlob(b => b ? resolve({ blob: b, url }) : reject(new Error('\ubcc0\ud658 \uc2e4\ud328')), 'image/jpeg', 0.9);
     };
-    img.onerror = () => reject(new Error('이미지를 열 수 없어요'));
+    img.onerror = () => reject(new Error('\uc774\ubbf8\uc9c0\ub97c \uc5f4 \uc218 \uc5c6\uc5b4\uc694'));
     img.src = url;
   });
 }
 
 async function getWorker() {
   if (worker) return worker;
-  if (!window.Tesseract) throw new Error('인식 엔진을 불러오지 못했어요. 인터넷 연결을 확인하고 새로고침해주세요.');
-  setStatus('글자 인식 엔진을 불러오는 중… (처음 한 번만 걸려요)');
+  if (!window.Tesseract) throw new Error('\uc778\uc2dd \uc5d4\uc9c4\uc744 \ubd88\ub7ec\uc624\uc9c0 \ubabb\ud588\uc5b4\uc694. \uc778\ud130\ub137 \uc5f0\uacb0\uc744 \ud655\uc778\ud558\uace0 \uc0c8\ub85c\uace0\uce68\ud574\uc8fc\uc138\uc694.');
+  setStatus('\uae00\uc790 \uc778\uc2dd \uc5d4\uc9c4\uc744 \ubd88\ub7ec\uc624\ub294 \uc911\u2026 (\ucc98\uc74c \ud55c \ubc88\ub9cc \uac78\ub824\uc694)');
   worker = await Tesseract.createWorker('kor+eng', 1, {
     logger: m => {
-      if (m.status === 'recognizing text') setStatus('글자를 읽는 중… ' + Math.round(m.progress * 100) + '%');
-      else if (m.progress != null && m.progress < 1) setStatus('엔진 준비 중… ' + Math.round(m.progress * 100) + '%');
+      if (m.status === 'recognizing text') setStatus('\uae00\uc790\ub97c \uc77d\ub294 \uc911\u2026 ' + Math.round(m.progress * 100) + '%');
+      else if (m.progress != null && m.progress < 1) setStatus('\uc5d4\uc9c4 \uc900\ube44 \uc911\u2026 ' + Math.round(m.progress * 100) + '%');
     }
   });
   return worker;
@@ -92,50 +92,50 @@ async function extract(files) {
   try {
     const w = await getWorker();
     for (const file of files) {
-      setStatus('사진을 준비하는 중…');
+      setStatus('\uc0ac\uc9c4\uc744 \uc900\ube44\ud558\ub294 \uc911\u2026');
       const { blob, url } = await shrink(file);
       preview.src = url; preview.style.display = 'block';
-      setStatus('글자를 읽는 중…');
+      setStatus('\uae00\uc790\ub97c \uc77d\ub294 \uc911\u2026');
       const { data } = await w.recognize(blob);
       const prev = out.value ? out.value.replace(/\s+$/, '') + '\n\n' : '';
       out.value = prev + data.text.trim();
     }
-    setStatus('완료! 내용을 확인하고 수정한 뒤 저장하세요.');
+    setStatus('\uc644\ub8cc! \ub0b4\uc6a9\uc744 \ud655\uc778\ud558\uace0 \uc218\uc815\ud55c \ub4a4 \uc800\uc7a5\ud558\uc138\uc694.');
   } catch (e) {
-    setStatus('글자를 읽지 못했어요: ' + ((e && e.message) || '알 수 없는 오류'));
+    setStatus('\uae00\uc790\ub97c \uc77d\uc9c0 \ubabb\ud588\uc5b4\uc694: ' + ((e && e.message) || '\uc54c \uc218 \uc5c6\ub294 \uc624\ub958'));
   }
   busy = false;
 }
 
 ['cam', 'gal'].forEach(id => $(id).addEventListener('change', e => {
   const files = [...e.target.files]; e.target.value = '';
-  if (files.length) { setStatus('사진을 받았어요…'); extract(files); }
+  if (files.length) { setStatus('\uc0ac\uc9c4\uc744 \ubc1b\uc558\uc5b4\uc694\u2026'); extract(files); }
 }));
 
 $('copy').onclick = async () => {
-  try { await navigator.clipboard.writeText(out.value); setStatus('복사했어요.'); }
-  catch (e) { out.select(); setStatus('텍스트를 선택했어요. 직접 복사해주세요.'); }
+  try { await navigator.clipboard.writeText(out.value); setStatus('\ubcf5\uc0ac\ud588\uc5b4\uc694.'); }
+  catch (e) { out.select(); setStatus('\ud14d\uc2a4\ud2b8\ub97c \uc120\ud0dd\ud588\uc5b4\uc694. \uc9c1\uc811 \ubcf5\uc0ac\ud574\uc8fc\uc138\uc694.'); }
 };
 $('clear').onclick = () => { out.value = ''; preview.style.display = 'none'; setStatus(''); };
 
 $('save').onclick = async () => {
   const text = out.value.trim();
-  if (!text) { setStatus('저장할 내용이 없어요. 먼저 사진을 올려주세요.'); return; }
-  if (!window.docx) { setStatus('워드 변환 도구를 불러오지 못했어요. 새로고침해주세요.'); return; }
+  if (!text) { setStatus('\uc800\uc7a5\ud560 \ub0b4\uc6a9\uc774 \uc5c6\uc5b4\uc694. \uba3c\uc800 \uc0ac\uc9c4\uc744 \uc62c\ub824\uc8fc\uc138\uc694.'); return; }
+  if (!window.docx) { setStatus('\uc6cc\ub4dc \ubcc0\ud658 \ub3c4\uad6c\ub97c \ubd88\ub7ec\uc624\uc9c0 \ubabb\ud588\uc5b4\uc694. \uc0c8\ub85c\uace0\uce68\ud574\uc8fc\uc138\uc694.'); return; }
   try {
     const { Document, Packer, Paragraph, TextRun } = window.docx;
     const paragraphs = text.split(/\r?\n/).map(line =>
       new Paragraph({ spacing: { after: 120, line: 320 }, children: [new TextRun({ text: line, font: 'Malgun Gothic', size: 22 })] }));
     const blob = await Packer.toBlob(new Document({ sections: [{ children: paragraphs }] }));
     const d = new Date(), p = n => String(n).padStart(2, '0');
-    const name = `사진글자_${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}_${p(d.getHours())}${p(d.getMinutes())}.docx`;
+    const name = `\uc0ac\uc9c4\uae00\uc790_${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}_${p(d.getHours())}${p(d.getMinutes())}.docx`;
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 5000);
-    setStatus('워드 파일을 저장했어요.');
+    setStatus('\uc6cc\ub4dc \ud30c\uc77c\uc744 \uc800\uc7a5\ud588\uc5b4\uc694.');
   } catch (e) {
-    setStatus('저장하지 못했어요: ' + ((e && e.message) || '알 수 없는 오류'));
+    setStatus('\uc800\uc7a5\ud558\uc9c0 \ubabb\ud588\uc5b4\uc694: ' + ((e && e.message) || '\uc54c \uc218 \uc5c6\ub294 \uc624\ub958'));
   }
 };
 </script>
